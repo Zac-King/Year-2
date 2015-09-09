@@ -69,11 +69,13 @@
   <ItemGroup>
     <ClCompile Include="downloads\aieutilities-master\aieutilities-master\aie\Gizmos.cpp" />
     <ClCompile Include="downloads\gl_core_4_4.c" />
+    <ClCompile Include="GalacticBody.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dep\include\Gizmos.h" />
     <ClInclude Include="downloads\gl_core_4_4.h" />
+    <ClInclude Include="GalacticBody.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
