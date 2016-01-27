@@ -10,11 +10,6 @@ using glm::vec3;
 using glm::vec4;
 using glm::mat4;
 
-void orbit(vec3 a, vec3 gravCen)
-{
-	//a.x = cos();
-}
-
 int main()
 {
 	if (glfwInit() == false)	// pg 1
@@ -39,7 +34,8 @@ int main()
 
 	auto major = ogl_GetMajorVersion();		
 	auto minor = ogl_GetMinorVersion();		
-	printf_s("GL: %i.%i\n", major, minor);	
+	printf_s("GL: %i.%i\n", major, minor);	
+
 	glClearColor(0.25f, 0.25f, 0.25f, 1);	// Color (RGBA)
 	glEnable(GL_DEPTH_TEST);
 
@@ -59,21 +55,21 @@ int main()
 	//GalacticBody jupiter	= GalacticBody(vec3{ 2.5f, 0.0f ,0.0f }, sun.getPos(), 0.05f);
 
 	GalacticBody planet1  = GalacticBody(vec3{ 0.0f, 0.0f ,0.0f }, vec3{ 0.0f, 0.0f ,0.0f }, 0);
-	GalacticBody planet2  = GalacticBody(vec3{ 0.5f, 0.0f, 0.0f }, planet1.getPos(), 0.01f);
-	GalacticBody planet3  = GalacticBody(vec3{ 1.0f, 0.0f, 0.0f }, planet2.getPos(), 0.02f);
-	GalacticBody planet4  = GalacticBody(vec3{ 1.5f, 0.0f ,0.0f }, planet3.getPos(), 0.03f);
-	GalacticBody planet5  = GalacticBody(vec3{ 2.0f, 0.0f ,0.0f }, planet4.getPos(), 0.04f);
-	GalacticBody planet6  = GalacticBody(vec3{ 2.5f, 0.0f ,0.0f }, planet5.getPos(), 0.05f);
-	GalacticBody planet7  = GalacticBody(vec3{ 3.0f, 0.0f ,0.0f }, planet6.getPos(), 0.06f);
-	GalacticBody planet8  = GalacticBody(vec3{ 3.5f, 0.0f, 0.0f }, planet7.getPos(), 0.07f);
-	GalacticBody planet9  = GalacticBody(vec3{ 4.0f, 0.0f, 0.0f }, planet8.getPos(), 0.08f);
-	GalacticBody planet10 = GalacticBody(vec3{ 4.5f, 0.0f ,0.0f }, planet9.getPos(), 0.09f);
-	GalacticBody planet11 = GalacticBody(vec3{ 5.0f, 0.0f ,0.0f }, planet10.getPos(), 0.10f);
-	GalacticBody planet12 = GalacticBody(vec3{ 5.5f, 0.0f ,0.0f }, planet11.getPos(), 0.11f);
+	GalacticBody planet2  = GalacticBody(vec3{ 0.5f, 0.0f, 0.0f }, planet1.getPos(), .01f);
+	GalacticBody planet3  = GalacticBody(vec3{ 1.0f, 0.0f, 0.0f }, planet2.getPos(), .02f);
+	GalacticBody planet4  = GalacticBody(vec3{ 1.5f, 0.0f ,0.0f }, planet3.getPos(), .03f);
+	GalacticBody planet5  = GalacticBody(vec3{ 2.0f, 0.0f ,0.0f }, planet4.getPos(), .04f);
+	GalacticBody planet6  = GalacticBody(vec3{ 2.5f, 0.0f ,0.0f }, planet5.getPos(), .05f);
+	GalacticBody planet7  = GalacticBody(vec3{ 3.0f, 0.0f ,0.0f }, planet6.getPos(), .06f);
+	GalacticBody planet8  = GalacticBody(vec3{ 3.5f, 0.0f, 0.0f }, planet7.getPos(), .07f);
+	GalacticBody planet9  = GalacticBody(vec3{ 4.0f, 0.0f, 0.0f }, planet8.getPos(), .08f);
+	GalacticBody planet10 = GalacticBody(vec3{ 4.5f, 0.0f ,0.0f }, planet9.getPos(), .09f);
+	GalacticBody planet11 = GalacticBody(vec3{ 5.0f, 0.0f ,0.0f }, planet10.getPos(), .10f);
+	GalacticBody planet12 = GalacticBody(vec3{ 5.5f, 0.0f ,0.0f }, planet11.getPos(), .11f);
 
 	// Game Loop
-	while (glfwWindowShouldClose(window) == false &&
-		glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
+	while (	glfwWindowShouldClose(window) == false &&
+			glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
                                                                                                                                                                                                                                                                                                                                             
@@ -105,7 +101,7 @@ int main()
 		planet8.Update();
 		planet9.Update();
 		planet10.Update();
-		planet10.Update();
+		planet11.Update();
 		planet12.Update();
 
 
