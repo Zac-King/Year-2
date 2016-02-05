@@ -16,7 +16,6 @@ struct MyVertex
 {
 	float x, y, z;        //Vertex
 	float nx, ny, nz;     //Normal
-	float s0, t0;         //Texcoord0
 };
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
@@ -64,8 +63,6 @@ int main()
 	auto minor = ogl_GetMinorVersion();
 	printf_s("GL: %i.%i\n", major, minor);
 
-
-
 	const char* vsSource = "#version 150\n \
 					 in vec4 Position; \
 					 in vec4 Colour; \
@@ -108,61 +105,46 @@ int main()
 		delete[] infoLog;
 	}
 
-
-	unsigned int rows = 10;
-	unsigned int cols = 10;
 	MyVertex pvertex[3];
+	//VERTEX 0
 	pvertex[0].x = 0.0;
 	pvertex[0].y = 0.0;
 	pvertex[0].z = 0.0;
-	pvertex[0].nx = 0.0;
-	pvertex[0].ny = 0.0;
-	pvertex[0].nz = 1.0;
-	pvertex[0].s0 = 0.0;
-	pvertex[0].t0 = 0.0;
+
+
 	//VERTEX 1
 	pvertex[1].x = 1.0;
 	pvertex[1].y = 0.0;
-	pvertex[1].z = 0.0;
-	pvertex[1].nx = 0.0;
-	pvertex[1].ny = 0.0;
-	pvertex[1].nz = 1.0;
-	pvertex[1].s0 = 1.0;
-	pvertex[1].t0 = 0.0;
+	pvertex[1].z = 0.0; 
+
 	//VERTEX 2
 	pvertex[2].x = 0.0;
 	pvertex[2].y = 1.0;
-	pvertex[2].z = 0.0;
-	pvertex[2].nx = 0.0;
-	pvertex[2].ny = 0.0;
-	pvertex[2].nz = 1.0;
-	pvertex[2].s0 = 0.0;
-	pvertex[2].t0 = 1.0;
+	pvertex[2].z = 0.0; 
+
+	glGenVertexArrays(1, &m_VAO);
+	glBindVertexArray(m_VAO);
+
+	glGenBuffers(1, &m_VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(MyVertex) * 3, &pvertex[0].x, GL_STATIC_DRAW);
 
 	unsigned int pindices[3];
 	pindices[0] = 0;
 	pindices[1] = 1;
 	pindices[2] = 2;
 
-	//begin: bind and fill vbo + ibo	
-	glGenBuffers(1, &m_VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(MyVertex) * 3, &pvertex[0].x, GL_STATIC_DRAW);
-
 	glGenBuffers(1, &m_IBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 3, pindices, GL_STATIC_DRAW);
 
-	glGenVertexArrays(1, &m_VAO);
-	glBindVertexArray(m_VAO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_VBO);
+	
+	 
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(MyVertex), BUFFER_OFFSET(0));
 	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(MyVertex), BUFFER_OFFSET(0));
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(MyVertex), BUFFER_OFFSET(12));
+	glBindVertexArray(0);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IBO);
-
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -175,15 +157,19 @@ int main()
 	glUseProgram(m_shader);
 	unsigned int projectionViewUniform = glGetUniformLocation(m_shader, "ProjectionView");
 	glUniformMatrix4fv(projectionViewUniform, 1, false, glm::value_ptr(m_projectionViewMatrix));
- 
+
+
 	glBindVertexArray(m_VAO);
 	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
+	glBindVertexArray(0);
+
+
+
+
 
 
 	glfwSwapBuffers(window);
 	glfwPollEvents();
-
-
 	system("Pause");
 	glfwDestroyWindow(window);
 	glfwTerminate();
