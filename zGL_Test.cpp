@@ -131,8 +131,8 @@ int main()
 	myTri[1] = { { 1,0,0 },{ 0,20,0,0 } };
 	myTri[2] = { { 1,0,0 },{ 0,0,20,0 } };
 
-
 #pragma endregion
+
 
 	// Setting up Vertex Array object
 	glGenVertexArrays(1, &m_VAO);

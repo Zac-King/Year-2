@@ -63,15 +63,8 @@ struct Color
 
 int main()
 {
-<<<<<<< HEAD
-	// Setup OpenGL
-	mat4 m_view = glm::lookAt(vec3(10, 10, 10), vec3(0), vec3(0, 1, 0));
-	mat4 m_projection = glm::perspective(glm::pi<float>()*0.25f, 16 / 9.f, 0.1f, 1000.f);
-	mat4 m_projectionViewMatrix = m_projection * m_view;
 
-=======
 	//initialize the opengl window
->>>>>>> refs/remotes/chuwilliamson/master
 	if (glfwInit() == false)
 		return -1;
 
@@ -135,14 +128,7 @@ int main()
 	}
 	//END SHADER SETUP
 
-<<<<<<< HEAD
-	// setup Vertices
-	MyVertex pvertex[3];
-	//VERTEX 0
-	pvertex[0].x = 0.0;
-	pvertex[0].y = 0.0;
-	pvertex[0].z = 0.0;
-=======
+
 	//Setup some geometry to draw
 	//MyVertex will be the storage container for our vertex information
 	Vertex Vertices[] =
@@ -152,7 +138,6 @@ int main()
 		{1.f,-1.f,0.f},
 		{0.f,1.f,0.f},
 		
->>>>>>> refs/remotes/chuwilliamson/master
 
 	};
 
@@ -162,15 +147,8 @@ int main()
 		{ 0.f,-1.f,1.f, 1.0f },
 		{ 1.f,-1.f,0.f, 1.0f },
 		{ 0.f,1.f,0.f, 1.0f },
-
-
-<<<<<<< HEAD
-	// setup Buffers
-	glGenVertexArrays(1, &m_VAO);
-	glBindVertexArray(m_VAO);
-=======
 	};
->>>>>>> refs/remotes/chuwilliamson/master
+
 
 	unsigned int Indices[] = 
 	{
