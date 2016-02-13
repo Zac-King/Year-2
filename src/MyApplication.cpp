@@ -38,8 +38,6 @@ int Application::startup()
 
 int Application::update()
 {
-	
-
 	while (glfwWindowShouldClose(window) == false && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
 	{
 		// our game logic and update code goes here!
