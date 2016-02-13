@@ -13,13 +13,48 @@ using glm::vec3;
 using glm::vec4;
 using glm::mat4;
 using namespace std;
+ 
+GLuint m_VAO, m_VBO, m_IBO, m_CBO, m_shader;
+GLFWwindow* window;
+
+struct Vertex
+{
+	float x, y, z;        //Vertex	 
+};
+
+struct Color
+{
+	float r, g, b, a;
+};
+
+//Setup some geometry to draw
+//MyVertex will be the storage container for our vertex information
+Vertex Vertices[] = {
+	{ -1.f,-1.f,0.f },
+	{ 0.f,-1.f,1.f },
+	{ 1.f,-1.f,0.f },
+	{ 0.f,1.f,0.f },
 
 
+};
 
-#define BUFFER_OFFSET(i) ((char *)NULL + (i))
+Color Colors[] = {
+	{ -1.f,-1.f,0.f, 1.0f },
+	{ 0.f,-1.f,1.f, 1.0f },
+	{ 1.f,-1.f,0.f, 1.0f },
+	{ 0.f,1.f,0.f, 1.0f },
 
-unsigned int m_VAO, m_VBO, m_IBO;
-unsigned int m_shader;
+
+};
+
+unsigned int Indices[] = {
+	0, 3, 1,
+	1, 3, 2,
+	2, 3, 0,
+	0, 1, 2
+};
+
+
 
 string LoadShader(std::string file)
 {
@@ -35,39 +70,13 @@ string LoadShader(std::string file)
 	return shader;
 }
 
-void DrawSquare(glm::mat4 translate, unsigned int vbo, unsigned int ibo, unsigned int vao)
-{
-	unsigned int modelID = glGetUniformLocation(m_shader, "Model");
-	glUniformMatrix4fv(modelID, 1, false, glm::value_ptr(translate));
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-	glBindVertexArray(vao); 
-	//draw
-	glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
-	//unbind
-	glEnableVertexAttribArray(0);
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-}
-
-struct Vertex
-{
-	float x, y, z ;        //Vertex	 
-};
-
-struct Color
-{
-	float r, g, b, a;
-};
-
-int main()
+int setup_window()
 {
 	//initialize the opengl window
 	if (glfwInit() == false)
 		return -1;
 
-	GLFWwindow* window = glfwCreateWindow(1280, 720, "Computer Graphics", nullptr, nullptr);
+	window = glfwCreateWindow(1280, 720, "Computer Graphics", nullptr, nullptr);
 
 	if (window == nullptr)
 	{
@@ -91,6 +100,11 @@ int main()
 	printf_s("GL: %i.%i\n", major, minor);
 	//done initialize window and OpenGL
 
+	return 1;
+}
+
+int setup_shader()
+{
 	//BEGIN SHADER SETUP
 	string vshader = LoadShader("vertex_shader.vert");
 	string fshader = LoadShader("fragment_shader.frag");
@@ -124,100 +138,88 @@ int main()
 		printf("Error: Failed to link Gizmo shader program!\n%s\n", infoLog);
 		delete[] infoLog;
 	}
+
+
+
+	
 	//END SHADER SETUP
 
-	//Setup some geometry to draw
-	//MyVertex will be the storage container for our vertex information
-	Vertex Vertices[] =
-	{
-		{-1.f,-1.f,0.f},
-		{0.f,-1.f,1.f},
-		{1.f,-1.f,0.f},
-		{0.f,1.f,0.f},
-		
+	return 1;
+}
 
-	};
-
-	Color Colors[] =
-	{
-		{ -1.f,-1.f,0.f, 1.0f },
-		{ 0.f,-1.f,1.f, 1.0f },
-		{ 1.f,-1.f,0.f, 1.0f },
-		{ 0.f,1.f,0.f, 1.0f },
-
-
-	};
-
-	unsigned int Indices[] = 
-	{
-		0, 3, 1,
-		1, 3, 2,
-		2, 3, 0,
-		0, 1, 2 
-	};
-	
-
-
-	//done setup with geometry information
-
-	GLuint m_CBO;
-	
-
+int setup_buffers()
+{
+	glUseProgram(m_shader);
+	GLuint vertposition = glGetAttribLocation(m_shader, "Position");
+	GLuint vertcolor = glGetAttribLocation(m_shader, "Color");
 	//Now we put it on the graphics card
 	//generate your buffer on the graphics card
 	//this contains all the vertices
 	glGenVertexArrays(1, &m_VAO);
 	glBindVertexArray(m_VAO);
 
-		glGenBuffers(1, &m_VBO);
-		glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
-	
-		glGenBuffers(1, &m_CBO);
-		glBindBuffer(GL_ARRAY_BUFFER, m_CBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(Colors), Colors, GL_STATIC_DRAW);
-	
-		glGenBuffers(1, &m_IBO);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IBO);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Indices), Indices, GL_STATIC_DRAW);
+	glGenBuffers(1, &m_VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
+	glVertexAttribPointer(vertposition,
+		3,
+		GL_FLOAT,
+		GL_FALSE,
+		0,
+		((void*)0));
+	glEnableVertexAttribArray(vertposition);
+	glGenBuffers(1, &m_CBO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_CBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Colors), Colors, GL_STATIC_DRAW);
+	glVertexAttribPointer(vertcolor,
+		4,
+		GL_FLOAT,
+		GL_FALSE,
+		0,
+		((void*)(0)));
+	glEnableVertexAttribArray(vertcolor);
 
-	 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0); 		 
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glGenBuffers(1, &m_IBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Indices), Indices, GL_STATIC_DRAW);
 	//unbind now that we have generated and populated
- 
+
 	glEnableVertexAttribArray(0);
-	
-	glBindVertexArray(0); 
-	
+	glBindVertexArray(0);
 
+	return 1;
+}
+
+int main()
+{ 
+	setup_window();
+	setup_shader();
+	setup_buffers();
+	
 	//setup some matrices
-	mat4 m_model = glm::mat4();
-	mat4 m_view = glm::lookAt(vec3(2, 3, 10), vec3(0), vec3(0, 1, 0));
-	mat4 m_projection = glm::perspective(glm::pi<float>()*0.25f, 16 / 9.f, 0.1f, 1000.f);
-	mat4 m_projectionViewMatrix = m_projection * m_view;
-	//end setup matrices
+	mat4 model = glm::mat4();
+	mat4 view = glm::lookAt(vec3(2, 3, 10), vec3(0), vec3(0, 1, 0));
+	mat4 projection = glm::perspective(glm::pi<float>()*0.25f, 16 / 9.f, 0.1f, 1000.f);
 
-	unsigned int projectionViewUniform = glGetUniformLocation(m_shader, "ProjectionView");
-	//start using shader...
-	glUseProgram(m_shader);
+	//end setup matrices
+	unsigned int projectionMatrixID = glGetUniformLocation(m_shader, "Projection");
+	unsigned int viewMatrixID = glGetUniformLocation(m_shader, "View");
+	unsigned int modelMatrixID = glGetUniformLocation(m_shader, "Model");
 	//because we are sending it to the uniform with this function
-	glUniformMatrix4fv(projectionViewUniform, 1, false, glm::value_ptr(m_projectionViewMatrix));
+	glUniformMatrix4fv(projectionMatrixID, 1, false, &projection[0][0]);
+	glUniformMatrix4fv(viewMatrixID, 1, false, &view[0][0]);
+	glUniformMatrix4fv(modelMatrixID, 1, false, &model[0][0]);
 
 	while (glfwWindowShouldClose(window) == false && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
 	{
 		glClearColor(0.25f, 0.25f, 0.25f, 1);
 		glEnable(GL_DEPTH_TEST);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
-		unsigned int modelID = glGetUniformLocation(m_shader, "Model"); 
-		glUniformMatrix4fv(modelID, 1, false, glm::value_ptr(m_model));
 	 
 		glBindVertexArray(m_VAO); 
 		//draw
-		glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
-		//unbind
-		
+		glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, ((void*)0));
+		//unbind		
 		glBindVertexArray(0); 
  
 		glfwSwapBuffers(window);
