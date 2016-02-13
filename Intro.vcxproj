@@ -17,6 +17,7 @@
     <ClCompile Include="src\Source.cpp" />
     <ClCompile Include="src\test.cc" />
     <ClCompile Include="src\tiny_obj_loader.cpp" />
+    <ClCompile Include="zGL_Test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dep\include\Gizmos.h" />

@@ -33,6 +33,7 @@ unsigned int m_shader;
 
 int main()
 {
+	// Setup OpenGL
 	mat4 m_view = glm::lookAt(vec3(10, 10, 10), vec3(0), vec3(0, 1, 0));
 	mat4 m_projection = glm::perspective(glm::pi<float>()*0.25f, 16 / 9.f, 0.1f, 1000.f);
 	mat4 m_projectionViewMatrix = m_projection * m_view;
@@ -79,6 +80,7 @@ int main()
 	unsigned int vs = glCreateShader(GL_VERTEX_SHADER);
 	unsigned int fs = glCreateShader(GL_FRAGMENT_SHADER);
 
+	// setup Shaders
 	glShaderSource(vs, 1, (const char**)&vsSource, 0);
 	glCompileShader(vs);
 
@@ -105,6 +107,7 @@ int main()
 		delete[] infoLog;
 	}
 
+	// setup Vertices
 	MyVertex pvertex[3];
 	//VERTEX 0
 	pvertex[0].x = 0.0;
@@ -122,6 +125,7 @@ int main()
 	pvertex[2].y = 1.0;
 	pvertex[2].z = 0.0; 
 
+	// setup Buffers
 	glGenVertexArrays(1, &m_VAO);
 	glBindVertexArray(m_VAO);
 
