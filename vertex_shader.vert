@@ -6,8 +6,12 @@ out vec4 vColor;
 uniform mat4 Projection;
 uniform mat4 View;
 uniform mat4 Model; 
+uniform float time;
 void main() 
 { 
-	vColor = Color;
-	gl_Position = Projection * View * Model *  Position; 
+	vec4 P = vec4(1.0, 1.0, 1.0, 1.0);
+	vColor = Color * cos(time);	
+	P.x = cos(time);
+	P.y = sin(time);
+	gl_Position = Projection * View * Model * P * Position; 
 };

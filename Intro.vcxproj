@@ -26,6 +26,9 @@
     <ClInclude Include="dep\include\test.h" />
     <ClInclude Include="dep\include\tiny_obj_loader.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="vertex_shader.vert" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E1595987-9B83-4A7A-BE59-FBF49119FAFC}</ProjectGuid>
     <RootNamespace>Intro</RootNamespace>

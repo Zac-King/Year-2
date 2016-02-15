@@ -7,6 +7,7 @@
 #include <glm\ext.hpp>
 #include <iostream>
 #include <fstream>
+#include <string>
 
 using namespace std;
 
@@ -19,11 +20,9 @@ using glm::mat4;
 struct Vertex
 {
 	vec3 position;	// X,Y,Z
-	vec4 color;		// R,G,B,A
 };
 
-// only to test i want it to work with the Vertex struct's color
-struct Color 
+struct Color
 {
 	float r, g, b, a;
 };
@@ -36,7 +35,27 @@ unsigned int	m_VAO,		// Vertex Array Object
 
 GLFWwindow* window;
 
-std::string LoadShader(std::string file)	// Loading shader file from the exploer based on the file name parameter passed
+#pragma region myTestVariables
+// Test triangle
+Vertex myTri[] = {
+	{ { -1.f,-1.f,0.f } },
+	{ { 0.f,-1.f,1.f } },
+	{ { 1.f,-1.f,0.f } },
+	{ { 0.f,1.f,0.f } },
+};
+// Test Indices
+unsigned int Indices[] = { 0, 3, 1,
+1, 3, 2,
+2, 3, 0,
+0, 1, 2 };
+// Test Color
+Color Colors[] = { { -1.f,-1.f,0.f, 1.0f },
+{ 0.f,-1.f,1.f, 1.0f },
+{ 1.f,-1.f,0.f, 1.0f },
+{ 0.f,1.f,0.f, 1.0f }, };
+#pragma endregion
+
+std::string LoadShader(std::string file)	// Loading shader file from the file name parameter passed
 {
 	string line, shader;
 	ifstream inFile(file);
@@ -89,8 +108,11 @@ int setupShader()
 	std::string vshader = LoadShader("vertex_shader.vert");
 	std::string fshader = LoadShader("fragment_shader.frag");
 	// Get the pointers to the character arrays
-	const char* vsSource = vshader.c_str(); 
+	const char* vsSource = vshader.c_str();
 	const char* fsSource = fshader.c_str();
+
+
+
 	// Creating the individual shader objects 
 	unsigned int vs = glCreateShader(GL_VERTEX_SHADER);		// Our Vertex shader object
 	unsigned int fs = glCreateShader(GL_FRAGMENT_SHADER);	// Our Fragment shader Object
@@ -127,11 +149,11 @@ int setupShader()
 	return 1;
 }
 
-int setupBuffer(unsigned int *indices, Color *color, Vertex *vertices)
+int setupBuffer()
 {
 	glUseProgram(m_shader);
 	GLuint vertposition = glGetAttribLocation(m_shader, "Position");
-	GLuint vertcolor	= glGetAttribLocation(m_shader, "Color");
+	GLuint vertcolor = glGetAttribLocation(m_shader, "Color");
 
 	// Setting up Vertex Array object
 	glGenVertexArrays(1, &m_VAO);
@@ -140,21 +162,21 @@ int setupBuffer(unsigned int *indices, Color *color, Vertex *vertices)
 	// Setting up Vertex Buffer object
 	glGenBuffers(1, &m_VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 3, &vertices[0].position.x, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(myTri) * 4, myTri, GL_STATIC_DRAW);
 	glVertexAttribPointer(vertposition, 3, GL_FLOAT, GL_FALSE, 0, ((void*)0)); // Pointer to where all the vert info is
 	glEnableVertexAttribArray(vertposition);
-	
+
 	// Setting up Color Buffer object
 	glGenBuffers(1, &m_CBO);
 	glBindBuffer(GL_ARRAY_BUFFER, m_CBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(&color), &color, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Colors), Colors, GL_STATIC_DRAW);
 	glVertexAttribPointer(vertcolor, 4, GL_FLOAT, GL_FALSE, 0, ((void*)(0)));
 	glEnableVertexAttribArray(vertcolor);
 
 	// Setting up Index buffer
 	glGenBuffers(1, &m_IBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 3, indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Indices), Indices, GL_STATIC_DRAW);
 
 	glEnableVertexAttribArray(0);
 	glBindVertexArray(0);
@@ -164,43 +186,25 @@ int setupBuffer(unsigned int *indices, Color *color, Vertex *vertices)
 
 int main()
 {
-#pragma region myTestVariables
-	// Test triangle
-	Vertex myTri[] = {
-		{{ -1.f,-1.f,0.f },	{ 0,0,0,0 }},
-		{{ 0.f,-1.f,1.f },	{ 0,0,0,0 }},
-		{{ 1.f,-1.f,0.f },	{ 0,0,0,0 }},
-		{{ 0.f,1.f,0.f },	{ 0,0,0,0 }},
-	};
-	// Test Indices
-	unsigned int Indices[] = {	0, 3, 1,
-								1, 3, 2,
-								2, 3, 0,
-								0, 1, 2};
-	// Test Color
-	Color Colors[] = {	{ -1.f,-1.f,0.f, 1.0f },
-						{ 0.f,-1.f,1.f, 1.0f },
-						{ 1.f,-1.f,0.f, 1.0f },
-						{ 0.f,1.f,0.f, 1.0f },	};
-#pragma endregion
-
 	setupWindow();
 	setupShader();
-	setupBuffer(Indices, Colors, myTri);
+	setupBuffer();
 
 	// Set up camera
 	mat4 model = glm::mat4();
 	mat4 view = glm::lookAt(vec3(2, 3, 10), vec3(0), vec3(0, 1, 0));					// Set up Camera in a simulated 3D enviroment
 	mat4 projection = glm::perspective(glm::pi<float>()*0.25f, 16 / 9.f, 0.1f, 1000.f);	// Camera capacity FOV (view angle) and aspect ratio(relation of width and height, how the view is stretched)
-	
+
 																							//end setup matrices
 	unsigned int projectionMatrixID = glGetUniformLocation(m_shader, "Projection");
 	unsigned int viewMatrixID = glGetUniformLocation(m_shader, "View");
 	unsigned int modelMatrixID = glGetUniformLocation(m_shader, "Model");
+	unsigned int timeID = glGetUniformLocation(m_shader, "time");
 	//because we are sending it to the uniform with this function
 	glUniformMatrix4fv(projectionMatrixID, 1, false, &projection[0][0]);
 	glUniformMatrix4fv(viewMatrixID, 1, false, &view[0][0]);
 	glUniformMatrix4fv(modelMatrixID, 1, false, &model[0][0]);
+	
 
 	while (glfwWindowShouldClose(window) == false && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
 	{
@@ -209,6 +213,7 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glBindVertexArray(m_VAO);
+		glUniform1f(timeID, glfwGetTime());
 		//draw
 		glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, ((void*)0));
 		//unbind		
@@ -217,7 +222,7 @@ int main()
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
-	
+
 	glfwDestroyWindow(window);	// Close the Display window we created at the start
 	glfwTerminate();			// Closes everything
 
