@@ -13,5 +13,6 @@ void main()
 	vColor = Color * cos(time);	
 	P.x = cos(time);
 	P.y = sin(time);
+	P.z = tan(time);
 	gl_Position = Projection * View * Model * P * Position; 
 };
