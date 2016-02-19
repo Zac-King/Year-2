@@ -8,8 +8,7 @@
 #include <glm\ext.hpp>
 #include <iostream>
 #include <fstream>
-#include <string>
-#include <vector>
+#include <string> 
 using glm::vec3;
 using glm::vec4;
 using glm::mat4;
@@ -23,12 +22,12 @@ using namespace std;
 unsigned int m_VAO, m_VBO, m_IBO;
 unsigned int m_shader;
 struct Vertex {
-	vec4 position;
-	vec4 colour;
-};
-void generateGrid(unsigned int rows, unsigned int cols, std::vector<glm::vec3> &, std::vector<int>&);
+	vec4 position;	 
+};
+
+void generateGrid(unsigned int rows, unsigned int cols, std::vector<vec3> &, std::vector<int>&);
 // function to create a grid
-void generateGrid(unsigned int rows, unsigned int cols, std::vector<glm::vec3> &verts, std::vector<int> &indices)
+void generateGrid(unsigned int rows, unsigned int cols, std::vector<vec3> &verts, std::vector<int> &indices)
 {
 	Vertex* aoVertices = new Vertex[rows * cols];
 	for (unsigned int r = 0; r < rows; ++r) {
@@ -217,7 +216,7 @@ int main()
 	//Now we put it on the graphics card
 	//generate your buffer on the graphics card
 	//this contains all the vertices
-	vector<glm::vec3> plane;
+	vector<vec3> plane;
 	vector<int> indices;
 
 
@@ -226,7 +225,7 @@ int main()
 	 
 	int numVertices = plane.size();
 	int numColors = sizeof(cube_colors) / sizeof(GLfloat);
-	int vertOffset = plane.size() * sizeof(glm::vec3);
+	int vertOffset = plane.size() * sizeof(vec3);
 	int colorOffset = numColors * sizeof(cube_colors);
 
 	//int numIndices = sizeof(cube_elements) / sizeof(unsigned int);
@@ -255,7 +254,7 @@ int main()
 
 	glBufferSubData(GL_ARRAY_BUFFER, 
 		0,
-		plane.size() * sizeof(glm::vec3),
+		plane.size() * sizeof(vec3),
 		plane.data());
 	glBufferSubData(GL_ARRAY_BUFFER, vertOffset, colorOffset, &cube_colors[0]);
 
@@ -275,12 +274,12 @@ int main()
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
+	
 
 
-
-	//setup some matrices
-	mat4 m_model = glm::mat4();
-	mat4 m_view = glm::lookAt(glm::vec3(2.0, 3.0, 15.0), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
+	//setup some matricesa
+	mat4 m_model = mat4();
+	mat4 m_view = lookAt(vec3(2.0, 3.0, 15.0), vec3(0.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0));
 	mat4 m_projection = glm::perspective(glm::pi<float>()*0.25f, 16 / 9.f, 0.1f, 1000.f);
 	mat4 m_projectionViewMatrix = m_projection * m_view;
 	//end setup matrices
@@ -289,7 +288,7 @@ int main()
 	//start using shader...
 	glUseProgram(m_shader);
 	//because we are sending it to the uniform with this function
-	glUniformMatrix4fv(projectionViewUniform, 1, false, glm::value_ptr(m_projectionViewMatrix));
+	glUniformMatrix4fv(projectionViewUniform, 1, false, value_ptr(m_projectionViewMatrix));
 
 	while (glfwWindowShouldClose(window) == false && glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS)
 	{
@@ -299,8 +298,8 @@ int main()
 
 		unsigned int modelID = glGetUniformLocation(m_shader, "Model");
 		//float time = glfwGetTime();
-		//m_model = glm::rotate(glm::mat4(), 5.0f * cos(time), vec3(0, 1, 0));
-		glUniformMatrix4fv(modelID, 1, false, glm::value_ptr(m_model));
+		//m_model = rotate(mat4(), 5.0f * cos(time), vec3(0, 1, 0));
+		glUniformMatrix4fv(modelID, 1, false, value_ptr(m_model));
 
 		glBindVertexArray(m_VAO);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IBO);
