@@ -7,12 +7,10 @@ uniform mat4 Projection;
 uniform mat4 View;
 uniform mat4 Model; 
 uniform float time;
+uniform mat4 ProjectionView;
+
 void main() 
 { 
-	vec4 P = vec4(1.0, 1.0, 1.0, 1.0);
 	vColor = Color * cos(time);	
-	P.x = cos(time);
-	P.y = sin(time);
-	P.z = tan(time);
-	gl_Position = Projection * View * Model * P * Position; 
+	gl_Position = ProjectionView * Position; 
 };

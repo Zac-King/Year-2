@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="MatthewsPerlinPlane.cpp" />
     <ClCompile Include="src\Gizmos.cpp" />
     <ClCompile Include="src\gl_core_4_4.c" />
     <ClCompile Include="src\MyApplication.cpp" />
@@ -27,6 +28,7 @@
     <ClInclude Include="dep\include\tiny_obj_loader.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="fragment_shader.frag" />
     <None Include="vertex_shader.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
