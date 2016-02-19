@@ -9,6 +9,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
 using glm::vec3;
 using glm::vec4;
 using glm::mat4;
@@ -16,10 +17,68 @@ using namespace std;
 
 
 
+
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
 unsigned int m_VAO, m_VBO, m_IBO;
 unsigned int m_shader;
+struct Vertex {
+	vec4 position;
+	vec4 colour;
+};
+void generateGrid(unsigned int rows, unsigned int cols, std::vector<glm::vec3> &, std::vector<int>&);
+// function to create a grid
+void generateGrid(unsigned int rows, unsigned int cols, std::vector<glm::vec3> &verts, std::vector<int> &indices)
+{
+	Vertex* aoVertices = new Vertex[rows * cols];
+	for (unsigned int r = 0; r < rows; ++r) {
+		for (unsigned int c = 0; c < cols; ++c)
+		{
+			aoVertices[r * cols + c].position = vec4((float)c, 0, (float)r, 1);
+			verts.push_back(vec3((float)c, 0, (float)r));
+		}
+	}
+
+	// defining index count based off quad count (2 triangles per quad)
+	unsigned int* auiIndices = new unsigned int[(rows - 1) * (cols - 1) * 6];
+	unsigned int index = 0;
+	for (unsigned int r = 0; r < (rows - 1); ++r)
+	{
+		for (unsigned int c = 0; c < (cols - 1); ++c)
+		{
+			int p0 = r * cols + c;
+			int p1 = (r + 1) * cols + c;
+			int p2 = (r + 1) * cols + (c + 1);
+			int p3 = r * cols + c;
+			int p4 = (r + 1) * cols + (c + 1);
+			int p5 = r * cols + (c + 1);
+			indices.push_back(p0);
+			indices.push_back(p1);
+			indices.push_back(p2);
+			indices.push_back(p3);
+			indices.push_back(p4);
+			indices.push_back(p5);
+
+
+			// triangle 1
+			auiIndices[index++] = r * cols + c;
+			auiIndices[index++] = (r + 1) * cols + c;
+			auiIndices[index++] = (r + 1) * cols + (c + 1);
+			// triangle 2
+			auiIndices[index++] = r * cols + c;
+			auiIndices[index++] = (r + 1) * cols + (c + 1);
+			auiIndices[index++] = r * cols + (c + 1);
+		}
+	}
+
+	int f = 0;
+	int h = 3;
+	int b = f + h;
+
+	// we’ll do more here soon!
+	delete[] aoVertices;
+	delete[] auiIndices;
+}
 
 string LoadShader(std::string file)
 {
@@ -35,30 +94,56 @@ string LoadShader(std::string file)
 	return shader;
 }
 
-void DrawSquare(glm::mat4 translate, unsigned int vbo, unsigned int ibo, unsigned int vao)
+//Setup some geometry to draw
+//MyVertex will be the storage container for our vertex information
+static const GLfloat cube_vertices[] =
 {
-	unsigned int modelID = glGetUniformLocation(m_shader, "Model");
-	glUniformMatrix4fv(modelID, 1, false, glm::value_ptr(translate));
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-	glBindVertexArray(vao); 
-	//draw
-	glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
-	//unbind
-	glEnableVertexAttribArray(0);
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-}
-
-struct Vertex
-{
-	float x, y, z ;        //Vertex	 
+	// front
+	-1.0, -1.0,  1.0,//0
+	1.0, -1.0,  1.0, //1
+	1.0,  1.0,  1.0, //2
+	-1.0,  1.0,  1.0,//3
+	// back
+	-1.0, -1.0, -1.0,//4
+	1.0, -1.0, -1.0, //5
+	1.0,  1.0, -1.0, //6
+	-1.0,  1.0, -1.0,//7
 };
 
-struct Color
+// RGB color triples for every coordinate above.
+static const GLfloat cube_colors[] = {
+	// front colors
+	1.0, 0.0, 0.0,//0
+	0.0, 1.0, 0.0,//1
+	0.0, 0.0, 1.0,//2
+	1.0, 1.0, 1.0,//3
+	// back colors
+	1.0, 0.0, 0.0,//4
+	0.0, 1.0, 0.0,//5
+	0.0, 0.0, 1.0,//6
+	1.0, 1.0, 1.0,//7
+};
+
+unsigned int cube_elements[] =
 {
-	float r, g, b, a;
+	// front
+	0, 1, 2,
+	2, 3, 0,
+	// top
+	1, 5, 6,
+	6, 2, 1,
+	// back
+	7, 6, 5,
+	5, 4, 7,
+	// bottom
+	4, 0, 3,
+	3, 7, 4,
+	// left
+	4, 5, 1,
+	1, 0, 4,
+	// right
+	3, 2, 6,
+	6, 7, 3,
 };
 
 int main()
@@ -126,74 +211,76 @@ int main()
 	}
 	//END SHADER SETUP
 
-	//Setup some geometry to draw
-	//MyVertex will be the storage container for our vertex information
-	Vertex Vertices[] =
-	{
-		{-1.f,-1.f,0.f},
-		{0.f,-1.f,1.f},
-		{1.f,-1.f,0.f},
-		{0.f,1.f,0.f},
-		
-
-	};
-
-	Color Colors[] =
-	{
-		{ -1.f,-1.f,0.f, 1.0f },
-		{ 0.f,-1.f,1.f, 1.0f },
-		{ 1.f,-1.f,0.f, 1.0f },
-		{ 0.f,1.f,0.f, 1.0f },
 
 
-	};
-
-	unsigned int Indices[] = 
-	{
-		0, 3, 1,
-		1, 3, 2,
-		2, 3, 0,
-		0, 1, 2 
-	};
-	
-
-
-	//done setup with geometry information
-
-	GLuint m_CBO;
-	
 
 	//Now we put it on the graphics card
 	//generate your buffer on the graphics card
 	//this contains all the vertices
-	glGenVertexArrays(1, &m_VAO);
-	glBindVertexArray(m_VAO);
+	vector<glm::vec3> plane;
+	vector<int> indices;
 
-		glGenBuffers(1, &m_VBO);
-		glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
-	
-		glGenBuffers(1, &m_CBO);
-		glBindBuffer(GL_ARRAY_BUFFER, m_CBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(Colors), Colors, GL_STATIC_DRAW);
-	
-		glGenBuffers(1, &m_IBO);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IBO);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Indices), Indices, GL_STATIC_DRAW);
+
+	generateGrid(5, 5, plane, indices);
 
 	 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0); 		 
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, (void*)0);
-	//unbind now that we have generated and populated
- 
+	int numVertices = plane.size();
+	int numColors = sizeof(cube_colors) / sizeof(GLfloat);
+	int vertOffset = plane.size() * sizeof(glm::vec3);
+	int colorOffset = numColors * sizeof(cube_colors);
+
+	//int numIndices = sizeof(cube_elements) / sizeof(unsigned int);
+	int numIndices = indices.size();
+
+	printf("numVertices: %d \n", numVertices);
+	printf("numColors: %d \n", numColors);
+	printf("numIndices: %d \n", numIndices);
+
+
+
+	glGenBuffers(1, &m_IBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+		indices.size() * sizeof(int),
+		indices.data(),
+		GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	glGenBuffers(1, &m_VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+	glBufferData(GL_ARRAY_BUFFER, 
+		vertOffset + colorOffset, 
+		NULL,
+		GL_STATIC_DRAW);
+
+	glBufferSubData(GL_ARRAY_BUFFER, 
+		0,
+		plane.size() * sizeof(glm::vec3),
+		plane.data());
+	glBufferSubData(GL_ARRAY_BUFFER, vertOffset, colorOffset, &cube_colors[0]);
+
+
+
+	glGenVertexArrays(1, &m_VAO);
+	glBindVertexArray(m_VAO);
 	glEnableVertexAttribArray(0);
-	
-	glBindVertexArray(0); 
-	
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)vertOffset);
+	//unbind now that we have generated and populated
+
+
+
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+
+
 
 	//setup some matrices
 	mat4 m_model = glm::mat4();
-	mat4 m_view = glm::lookAt(vec3(2, 3, 10), vec3(0), vec3(0, 1, 0));
+	mat4 m_view = glm::lookAt(glm::vec3(2.0, 3.0, 15.0), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
 	mat4 m_projection = glm::perspective(glm::pi<float>()*0.25f, 16 / 9.f, 0.1f, 1000.f);
 	mat4 m_projectionViewMatrix = m_projection * m_view;
 	//end setup matrices
@@ -209,25 +296,30 @@ int main()
 		glClearColor(0.25f, 0.25f, 0.25f, 1);
 		glEnable(GL_DEPTH_TEST);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
-		unsigned int modelID = glGetUniformLocation(m_shader, "Model"); 
+
+		unsigned int modelID = glGetUniformLocation(m_shader, "Model");
+		//float time = glfwGetTime();
+		//m_model = glm::rotate(glm::mat4(), 5.0f * cos(time), vec3(0, 1, 0));
 		glUniformMatrix4fv(modelID, 1, false, glm::value_ptr(m_model));
-	 
-		glBindVertexArray(m_VAO); 
+
+		glBindVertexArray(m_VAO);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IBO);
 		//draw
-		glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
+		glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, BUFFER_OFFSET(0));
 		//unbind
-		
-		glBindVertexArray(0); 
- 
+
+		glBindVertexArray(0);
+
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
-
-
 
 	glfwDestroyWindow(window);
 	glfwTerminate();
 	return 0;
 }
+
+
+
+
 
