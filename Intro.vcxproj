@@ -11,18 +11,18 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Geometry.cpp" />
     <ClCompile Include="src\Gizmos.cpp" />
     <ClCompile Include="src\gl_core_4_4.c" />
-    <ClCompile Include="src\MyApplication.cpp" />
+    <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Source.cpp" />
-    <ClCompile Include="src\test.cc" />
     <ClCompile Include="src\tiny_obj_loader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="dep\include\Geometry.h" />
     <ClInclude Include="dep\include\Gizmos.h" />
     <ClInclude Include="dep\include\gl_core_4_4.h" />
-    <ClInclude Include="dep\include\MyApplication.h" />
-    <ClInclude Include="dep\include\test.h" />
+    <ClInclude Include="dep\include\Application.h" />
     <ClInclude Include="dep\include\tiny_obj_loader.h" />
   </ItemGroup>
   <ItemGroup>

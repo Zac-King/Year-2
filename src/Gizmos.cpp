@@ -8,8 +8,7 @@
 
 Gizmos* Gizmos::sm_singleton = nullptr;
 
-Gizmos::Gizmos(unsigned int a_maxLines, unsigned int a_maxTris,
-			   unsigned int a_max2DLines, unsigned int a_max2DTris)
+Gizmos::Gizmos(GLuint a_maxLines, GLuint a_maxTris, GLuint a_max2DLines, GLuint a_max2DTris)
 	: m_maxLines(a_maxLines),
 	m_lineCount(0),
 	m_lines(new GizmoLine[a_maxLines]),
@@ -39,8 +38,8 @@ Gizmos::Gizmos(unsigned int a_maxLines, unsigned int a_maxTris,
 					 void main()	{ FragColor = vColour; }";
     
     
-	unsigned int vs = glCreateShader(GL_VERTEX_SHADER);
-	unsigned int fs = glCreateShader(GL_FRAGMENT_SHADER);
+	GLuint vs = glCreateShader(GL_VERTEX_SHADER);
+	GLuint fs = glCreateShader(GL_FRAGMENT_SHADER);
 
 	glShaderSource(vs, 1, (const char**)&vsSource, 0);
 	glCompileShader(vs);
@@ -156,8 +155,8 @@ Gizmos::~Gizmos()
 	glDeleteProgram(m_shader);
 }
 
-void Gizmos::create(unsigned int a_maxLines /* = 0xffff */, unsigned int a_maxTris /* = 0xffff */,
-					unsigned int a_max2DLines /* = 0xff */, unsigned int a_max2DTris /* = 0xff */)
+void Gizmos::create(GLuint a_maxLines /* = 0xffff */, GLuint a_maxTris /* = 0xffff */,
+					GLuint a_max2DLines /* = 0xff */, GLuint a_max2DTris /* = 0xff */)
 {
 	if (sm_singleton == nullptr)
 		sm_singleton = new Gizmos(a_maxLines,a_maxTris,a_max2DLines,a_max2DTris);
@@ -199,14 +198,14 @@ void Gizmos::addTransform(const glm::mat4& a_transform, float a_fScale /* = 1.0f
 
 void Gizmos::addArcRing(const glm::vec3& a_center, float a_rotation, 
 	float a_innerRadius, float a_outerRadius, float a_arcHalfAngle,
-	unsigned int a_segments, const glm::vec4& a_fillColour, const glm::mat4* a_transform /* = nullptr */)
+	GLuint a_segments, const glm::vec4& a_fillColour, const glm::mat4* a_transform /* = nullptr */)
 {
 	glm::vec4 vSolid = a_fillColour;
 	vSolid.w = 1;
 
 	float fSegmentSize = (2 * a_arcHalfAngle) / a_segments;
 
-	for ( unsigned int i = 0 ; i < a_segments ; ++i )
+	for ( GLuint i = 0 ; i < a_segments ; ++i )
 	{
 		glm::vec3 v1outer( sinf( i * fSegmentSize - a_arcHalfAngle + a_rotation ) * a_outerRadius, 0, cosf( i * fSegmentSize - a_arcHalfAngle + a_rotation ) * a_outerRadius );
 		glm::vec3 v2outer( sinf( (i+1) * fSegmentSize - a_arcHalfAngle + a_rotation ) * a_outerRadius, 0, cosf( (i+1) * fSegmentSize - a_arcHalfAngle + a_rotation ) * a_outerRadius );
@@ -445,7 +444,7 @@ void Gizmos::draw(const glm::mat4& a_projectionView)
 
 		glUseProgram(sm_singleton->m_shader);
 		
-		unsigned int projectionViewUniform = glGetUniformLocation(sm_singleton->m_shader,"ProjectionView");
+		GLuint projectionViewUniform = glGetUniformLocation(sm_singleton->m_shader,"ProjectionView");
 		glUniformMatrix4fv(projectionViewUniform, 1, false, glm::value_ptr(a_projectionView));
 
 		if (sm_singleton->m_lineCount > 0)
@@ -508,7 +507,7 @@ void Gizmos::draw2D(const glm::mat4& a_projection)
 
 		glUseProgram(sm_singleton->m_shader);
 		
-		unsigned int projectionViewUniform = glGetUniformLocation(sm_singleton->m_shader,"ProjectionView");
+		GLuint projectionViewUniform = glGetUniformLocation(sm_singleton->m_shader,"ProjectionView");
 		glUniformMatrix4fv(projectionViewUniform, 1, false, glm::value_ptr(a_projection));
 
 		if (sm_singleton->m_2DlineCount > 0)
