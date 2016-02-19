@@ -8,14 +8,11 @@
 #include <glm\ext.hpp>
 #include <iostream>
 #include <fstream>
-#include <string> 
+#include <string>
 using glm::vec3;
 using glm::vec4;
 using glm::mat4;
 using namespace std;
-
-
-
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 
@@ -95,19 +92,17 @@ string LoadShader(std::string file)
 
 //Setup some geometry to draw
 //MyVertex will be the storage container for our vertex information
-static const GLfloat cube_vertices[] =
-{
-	// front
-	-1.0, -1.0,  1.0,//0
-	1.0, -1.0,  1.0, //1
-	1.0,  1.0,  1.0, //2
-	-1.0,  1.0,  1.0,//3
-					 // back
-	-1.0, -1.0, -1.0,//4
-	1.0, -1.0, -1.0, //5
-	1.0,  1.0, -1.0, //6
-	-1.0,  1.0, -1.0,//7
-};
+static const GLfloat cube_vertices[] ={ // front
+										-1.0, -1.0,  1.0,//0
+										1.0, -1.0,  1.0, //1
+										1.0,  1.0,  1.0, //2
+										-1.0,  1.0,  1.0,//3
+										// back
+										-1.0, -1.0, -1.0,//4
+										1.0, -1.0, -1.0, //5
+										1.0,  1.0, -1.0, //6
+										-1.0,  1.0, -1.0,//7
+										};
 
 // RGB color triples for every coordinate above.
 static const GLfloat cube_colors[] = {
@@ -211,8 +206,6 @@ int main()
 	//END SHADER SETUP
 
 
-
-
 	//Now we put it on the graphics card
 	//generate your buffer on the graphics card
 	//this contains all the vertices
@@ -239,25 +232,15 @@ int main()
 
 	glGenBuffers(1, &m_IBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-		indices.size() * sizeof(int),
-		indices.data(),
-		GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(int), indices.data(), GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	glGenBuffers(1, &m_VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-	glBufferData(GL_ARRAY_BUFFER,
-		vertOffset + colorOffset,
-		NULL,
-		GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertOffset + colorOffset, NULL, GL_STATIC_DRAW);
 
-	glBufferSubData(GL_ARRAY_BUFFER,
-		0,
-		plane.size() * sizeof(vec3),
-		plane.data());
+	glBufferSubData(GL_ARRAY_BUFFER, 0, plane.size() * sizeof(vec3), plane.data());
 	glBufferSubData(GL_ARRAY_BUFFER, vertOffset, colorOffset, &cube_colors[0]);
-
 
 
 	glGenVertexArrays(1, &m_VAO);
@@ -270,11 +253,8 @@ int main()
 	//unbind now that we have generated and populated
 
 
-
-
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-
 
 
 	//setup some matricesa
