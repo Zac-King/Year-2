@@ -57,7 +57,8 @@ Color Colors[] = { { -1.f,-1.f,0.f, 1.0f },
 
 std::string LoadShader(std::string file)	// Loading shader file from the file name parameter passed
 {
-	string line, shader;
+	string	line,	
+			shader; // Return value
 	ifstream inFile(file);
 	if (inFile.is_open())
 		while (std::getline(inFile, line))
@@ -190,17 +191,17 @@ int main()
 	setupShader();
 	setupBuffer();
 
-	// Set up camera
+	// Setup matrices
 	mat4 model = glm::mat4();
-	mat4 view = glm::lookAt(vec3(2, 3, 10), vec3(0), vec3(0, 1, 0));					// Set up Camera in a simulated 3D enviroment
+	mat4 view = glm::lookAt(vec3(2, 3, 10), vec3(0), vec3(0, 1, 0));					// Setup Camera in a simulated 3D enviroment
 	mat4 projection = glm::perspective(glm::pi<float>()*0.25f, 16 / 9.f, 0.1f, 1000.f);	// Camera capacity FOV (view angle) and aspect ratio(relation of width and height, how the view is stretched)
 
-																							//end setup matrices
 	unsigned int projectionMatrixID = glGetUniformLocation(m_shader, "Projection");
 	unsigned int viewMatrixID = glGetUniformLocation(m_shader, "View");
 	unsigned int modelMatrixID = glGetUniformLocation(m_shader, "Model");
 	unsigned int timeID = glGetUniformLocation(m_shader, "time");
-	//because we are sending it to the uniform with this function
+
+	// Setting up Camera and 3D enviroment
 	glUniformMatrix4fv(projectionMatrixID, 1, false, &projection[0][0]);
 	glUniformMatrix4fv(viewMatrixID, 1, false, &view[0][0]);
 	glUniformMatrix4fv(modelMatrixID, 1, false, &model[0][0]);
@@ -214,9 +215,9 @@ int main()
 
 		glBindVertexArray(m_VAO);
 		glUniform1f(timeID, glfwGetTime());
-		//draw
+		// Draw
 		glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, ((void*)0));
-		//unbind		
+		// Unbind		
 		glBindVertexArray(0);
 
 		glfwSwapBuffers(window);
