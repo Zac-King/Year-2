@@ -1,16 +1,23 @@
-#version 150
+#version 410
 
-in vec4 Position;  
-in vec4 Color;
-out vec4 vColor;  
-uniform mat4 Projection;
-uniform mat4 View;
-uniform mat4 Model; 
-uniform float time;
-uniform mat4 ProjectionView;
+layout( location = 0 ) in vec4 Position;
+layout( location = 1 ) in vec2 TexCoord;
 
-void main() 
-{ 
-	vColor = Color * cos(time);	
-	gl_Position = ProjectionView * Position; 
-};
+out vec2 vTexCoord;
+
+uniform mat4 ProjectionViewModel;
+
+uniform sampler2D noiseTexture;
+
+// heightScale has a default but can be overridden
+uniform float heightScale = 10;
+
+void main() {
+	vTexCoord = TexCoord;
+
+	// samples height
+	float height = texture( noiseTexture, TexCoord ).r;
+
+	// and offsets the Y by the height and heightScale
+	gl_Position = ProjectionViewModel * (Position + vec4(0,height * heightScale,0,0));
+}

@@ -36,9 +36,6 @@
     <ClCompile Include="zGL_Test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MatthewsPerlinPlane.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dep\include\Gizmos.h">

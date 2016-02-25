@@ -1,8 +1,12 @@
-#version 150
+#version 410
 
-in vec4 vColor; 
-out vec4 FragColor; 
-void main()	
-{
-	FragColor = vColor; 
-};
+uniform sampler2D noiseTexture;
+
+in vec2 vTexCoord;
+
+out vec4 FragColour;
+
+void main() {
+	// uses swizzling to display heightmap as greyscale
+	FragColour = vec4( texture( noiseTexture, vTexCoord ).rrr, 1 );
+}
