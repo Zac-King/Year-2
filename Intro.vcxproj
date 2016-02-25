@@ -10,6 +10,26 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Gizmos.cpp" />
+    <ClCompile Include="src\gl_core_4_4.c" />
+    <ClCompile Include="src\MyApplication.cpp" />
+    <ClCompile Include="src\Source.cpp" />
+    <ClCompile Include="src\test.cc" />
+    <ClCompile Include="src\tiny_obj_loader.cpp" />
+    <ClCompile Include="zGL_Test.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="dep\include\Gizmos.h" />
+    <ClInclude Include="dep\include\gl_core_4_4.h" />
+    <ClInclude Include="dep\include\MyApplication.h" />
+    <ClInclude Include="dep\include\test.h" />
+    <ClInclude Include="dep\include\tiny_obj_loader.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="fragment_shader.frag" />
+    <None Include="vertex_shader.vert" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E1595987-9B83-4A7A-BE59-FBF49119FAFC}</ProjectGuid>
     <RootNamespace>Intro</RootNamespace>
@@ -38,18 +58,28 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>C:\Users\dylan.guidry\Desktop\Year-2\dep;C:\Users\dylan.guidry\Desktop\Year-2\dep\glfw;C:\Users\dylan.guidry\Desktop\Year-2\dep\glm;C:\Users\dylan.guidry\Desktop\Year-2\dep\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+<<<<<<< HEAD
       <AdditionalIncludeDirectories>.\dep\include;.\dep;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+=======
+      <AdditionalIncludeDirectories>$(SolutionDir)dep\include;$(SolutionDir)dep;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+>>>>>>> refs/remotes/origin/FromMatthew
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>opengl32.lib;glfw3.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
+<<<<<<< HEAD
       <AdditionalLibraryDirectories>.\dep\glfw;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+=======
+      <AdditionalLibraryDirectories>.\dep\glfw;.\dep\glm;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+>>>>>>> refs/remotes/origin/FromMatthew
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -66,6 +96,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
+<<<<<<< HEAD
   <ItemGroup>
     <ClCompile Include="downloads\aieutilities-master\aieutilities-master\aie\Gizmos.cpp" />
     <ClCompile Include="downloads\gl_core_4_4.c" />
@@ -81,6 +112,8 @@
   <ItemGroup>
     <ResourceCompile Include="Intro.rc" />
   </ItemGroup>
+=======
+>>>>>>> refs/remotes/origin/FromMatthew
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
