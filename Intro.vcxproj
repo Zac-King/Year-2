@@ -66,20 +66,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-<<<<<<< HEAD
-      <AdditionalIncludeDirectories>.\dep\include;.\dep;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-=======
       <AdditionalIncludeDirectories>$(SolutionDir)dep\include;$(SolutionDir)dep;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
->>>>>>> refs/remotes/origin/FromMatthew
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>opengl32.lib;glfw3.lib;legacy_stdio_definitions.lib;%(AdditionalDependencies)</AdditionalDependencies>
-<<<<<<< HEAD
-      <AdditionalLibraryDirectories>.\dep\glfw;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-=======
       <AdditionalLibraryDirectories>.\dep\glfw;.\dep\glm;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
->>>>>>> refs/remotes/origin/FromMatthew
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -96,24 +88,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-<<<<<<< HEAD
-  <ItemGroup>
-    <ClCompile Include="downloads\aieutilities-master\aieutilities-master\aie\Gizmos.cpp" />
-    <ClCompile Include="downloads\gl_core_4_4.c" />
-    <ClCompile Include="GalacticBody.cpp" />
-    <ClCompile Include="Source.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="dep\include\Gizmos.h" />
-    <ClInclude Include="downloads\gl_core_4_4.h" />
-    <ClInclude Include="GalacticBody.h" />
-    <ClInclude Include="resource.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Intro.rc" />
-  </ItemGroup>
-=======
->>>>>>> refs/remotes/origin/FromMatthew
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

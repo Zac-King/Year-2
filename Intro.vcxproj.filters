@@ -36,9 +36,6 @@
     <ClCompile Include="zGL_Test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GalacticBody.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="dep\include\Gizmos.h">
@@ -54,9 +51,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="dep\include\tiny_obj_loader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GalacticBody.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
